@@ -1,192 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSINT Labs | Coming Soon...</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-                    colors: {
-                        brand: '#00f0ff', brandDeep: '#082f49',
-                        surface: 'rgba(11, 17, 32, 0.65)', surfaceBorder: 'rgba(0, 240, 255, 0.15)',
-                    },
-                    boxShadow: {
-                        'neon': '0 0 20px -5px rgba(0, 240, 255, 0.4)',
-                        'neon-glow': '0 0 40px 0 rgba(0, 240, 255, 0.15)',
-                    }
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coming Soon</title>
 
-    <style>
-        /*STYLES*/
-        :root { color-scheme: dark; }
-        body { background-color: #030712; color: #ffffff; min-height: 100vh; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        
-        /*BACKGROUND*/
-        #particle-canvas { position: fixed; inset: 0; z-index: -20; pointer-events: auto; }
-        .bg-vignette { position: fixed; inset: 0; z-index: -10; background: radial-gradient(circle at 50% 50%, transparent 0%, #030712 100%); pointer-events: none; }
-        .glass-panel { background: var(--surface); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--surfaceBorder); border-radius: 1.25rem; }
+<style>
+:root {
+    --text: #f5f7fa;
+    --muted: #8b8f98;
+}
 
-        .type-container { display: flex; align-items: center; justify-content: center; }
-        
-        #typed-text {
-            overflow: hidden;
-            white-space: nowrap;
-            width: 0px; /* Starts hidden */
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .cursor { 
-            display: inline-block; 
-            width: 4px; 
-            height: 1.1em; 
-            background-color: #00f0ff; 
-            margin-left: 8px; 
-            box-shadow: 0 0 10px #00f0ff; 
-            animation: blink 1s step-end infinite; 
-            flex-shrink: 0; /* Keeps the cursor from shrinking */
-        }
-        
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.1; } }
-    </style>
+/* PREMIUM BACKGROUND */
+body {
+    height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--text);
+
+    background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.05), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.04), transparent 50%),
+        linear-gradient(180deg, #0b0c10 0%, #06070a 100%);
+}
+
+canvas {
+    position: absolute;
+    inset: 0;
+}
+
+/* CONTENT */
+.container {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+h1 {
+    font-size: 2.8rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin-bottom: 45px;
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* LOADER */
+.loader {
+    width: 220px;
+    height: 2px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.loader-bar {
+    height: 100%;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, #ffffff, transparent);
+    animation: slide 3.2s ease-in-out infinite;
+    opacity: 0.85;
+}
+
+@keyframes slide {
+    0% { transform: translateX(-120%); }
+    50% { transform: translateX(120%); }
+    100% { transform: translateX(240%); }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.footer {
+    margin-top: 25px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.3);
+}
+</style>
 </head>
-<body class="font-sans antialiased relative selection:bg-brand selection:text-black">
 
-    <canvas id="particle-canvas"></canvas>
-    <div class="bg-vignette"></div>
+<body>
 
-    <main class="relative z-10 w-full max-w-3xl px-6 flex flex-col items-center justify-center text-center">
-        
-        <div class="absolute inset-0 bg-gradient-to-r from-brandDeep to-brand rounded-[2rem] blur-3xl opacity-20 -z-10"></div>
-        
-        <div class="glass-panel p-10 md:p-16 w-full shadow-neon-glow border-t-2 border-t-brand/50 relative overflow-hidden">
-            <div class="absolute -right-10 -top-10 w-32 h-32 bg-brand/10 rounded-full blur-[40px]"></div>
+<canvas id="stars"></canvas>
 
-            <div class="inline-block px-5 py-2 rounded-full bg-brand/10 border border-brand/30 text-brand text-[10px] font-black tracking-[0.3em] uppercase mb-8 shadow-neon">
-                OSINT Labs
-            </div>
-            
-            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.1] text-white uppercase mb-4 flex justify-center">
-                <span class="type-container">
-                    <span id="typed-text" class="text-brand drop-shadow-[0_0_15px_rgba(0,240,255,0.6)]">COMING SOON...</span>
-                    <span class="cursor"></span>
-                </span>
-            </h1>
+<div class="container">
+    <h1>Coming Soon</h1>
+    <p id="subtitle">We’re crafting something clean and precise.</p>
 
-            <p class="text-gray-400 text-sm md:text-base mt-6 max-w-xl mx-auto font-medium font-mono tracking-wide opacity-80">
-            </p>
-        </div>
-    </main>
+    <div class="loader">
+        <div class="loader-bar"></div>
+    </div>
 
-    <script>
-        // --- PARTICLES---
-        class ParticleNetwork {
-            constructor() {
-                this.canvas = document.getElementById('particle-canvas');
-                this.ctx = this.canvas.getContext('2d');
-                this.particles = [];
-                this.mouse = { x: null, y: null };
-                this.init();
-            }
+    <div class="footer">© 2026</div>
+</div>
 
-            init() {
-                this.resize();
-                window.addEventListener('resize', () => this.resize());
-                window.addEventListener('mousemove', (e) => { this.mouse.x = e.x; this.mouse.y = e.y; });
-                
-                for(let i = 0; i < 80; i++) {
-                    this.particles.push({
-                        x: Math.random() * this.canvas.width,
-                        y: Math.random() * this.canvas.height,
-                        vx: (Math.random() - 0.5) * 0.5,
-                        vy: (Math.random() - 0.5) * 0.5,
-                        radius: Math.random() * 2 + 1
-                    });
-                }
-                this.animate();
-            }
+<script>
+/* CANVAS SETUP */
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
 
-            resize() {
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight;
-            }
+let w, h;
+function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
 
-            animate() {
-                requestAnimationFrame(() => this.animate());
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+/* CLEAN FLOATING STARS */
+const layers = [
+    { count: 18, speed: 0.03, size: 0.5, alpha: 0.2 },
+    { count: 22, speed: 0.05, size: 0.7, alpha: 0.35 },
+    { count: 12, speed: 0.08, size: 1, alpha: 0.5 }
+];
 
-                for(let i = 0; i < this.particles.length; i++) {
-                    let p = this.particles[i];
-                    p.x += p.vx;
-                    p.y += p.vy;
+let stars = [];
 
-                    if(p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
-                    if(p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+layers.forEach(layer => {
+    for (let i = 0; i < layer.count; i++) {
+        stars.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * layer.speed,
+            vy: (Math.random() - 0.5) * layer.speed,
+            size: layer.size,
+            alpha: layer.alpha
+        });
+    }
+});
 
-                    this.ctx.beginPath();
-                    this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    this.ctx.fillStyle = 'rgba(0, 240, 255, 0.2)';
-                    this.ctx.fill();
+function draw() {
+    ctx.clearRect(0, 0, w, h);
 
-                    for(let j = i; j < this.particles.length; j++) {
-                        let p2 = this.particles[j];
-                        let dx = p.x - p2.x;
-                        let dy = p.y - p2.y;
-                        let dist = Math.sqrt(dx*dx + dy*dy);
+    for (let s of stars) {
+        s.x += s.vx;
+        s.y += s.vy;
 
-                        if(dist < 150) {
-                            this.ctx.beginPath();
-                            this.ctx.moveTo(p.x, p.y);
-                            this.ctx.lineTo(p2.x, p2.y);
-                            this.ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 - dist/1500})`;
-                            this.ctx.stroke();
-                        }
-                    }
+        if (s.x < 0) s.x = w;
+        if (s.x > w) s.x = 0;
+        if (s.y < 0) s.y = h;
+        if (s.y > h) s.y = 0;
 
-                    if(this.mouse.x) {
-                        let dx = this.mouse.x - p.x;
-                        let dy = this.mouse.y - p.y;
-                        let dist = Math.sqrt(dx*dx + dy*dy);
-                        if(dist < 200) {
-                            this.ctx.beginPath();
-                            this.ctx.moveTo(p.x, p.y);
-                            this.ctx.lineTo(this.mouse.x, this.mouse.y);
-                            this.ctx.strokeStyle = `rgba(0, 240, 255, ${0.2 - dist/1000})`;
-                            this.ctx.stroke();
-                        }
-                    }
-                }
-            }
-        }
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+        ctx.fill();
+    }
 
-        // GLIDE ANIMATION
-        window.onload = () => {
-            new ParticleNetwork();
+    requestAnimationFrame(draw);
+}
 
-            setTimeout(() => {
-                const textEl = document.getElementById('typed-text');
-                const targetWidth = textEl.scrollWidth;
+draw();
 
-                textEl.animate([
-                    { width: '0px' },
-                    { width: targetWidth + 'px' }
-                ], {
-                    duration: 2000,
-                    easing: 'ease-in-out',
-                    fill: 'forwards'
-                });
-            }, 1000);
-        };
-    </script>
+/* SMOOTH TEXT SWITCHING */
+const lines = [
+    "We’re crafting something clean and intentional.",
+    "OSINT tools, built for performance and speed."
+];
+
+const el = document.getElementById("subtitle");
+let index = 0;
+
+function switchText() {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(6px)";
+
+    setTimeout(() => {
+        index = (index + 1) % lines.length;
+        el.textContent = lines[index];
+
+        el.style.transform = "translateY(-6px)";
+
+        requestAnimationFrame(() => {
+            el.style.opacity = "1";
+            el.style.transform = "translateY(0)";
+        });
+    }, 500);
+}
+
+setInterval(switchText, 4000);
+</script>
+
 </body>
 </html>
